@@ -1,8 +1,8 @@
-package ms_plazoleta.ms_plazoleta.application.usecase;
+package com.plazoleta.ms_plazoleta.application.usecase;
 
-import ms_plazoleta.ms_plazoleta.domain.model.Restaurante;
-import ms_plazoleta.ms_plazoleta.domain.ports.in.IRestauranteServicePort;
-import ms_plazoleta.ms_plazoleta.domain.ports.out.IRestaurantePersistencePort;
+import com.plazoleta.ms_plazoleta.domain.model.Restaurante;
+import com.plazoleta.ms_plazoleta.domain.ports.in.IRestauranteServicePort;
+import com.plazoleta.ms_plazoleta.domain.ports.out.IRestaurantePersistencePort;
 
 public class RestauranteUseCase implements IRestauranteServicePort {
 

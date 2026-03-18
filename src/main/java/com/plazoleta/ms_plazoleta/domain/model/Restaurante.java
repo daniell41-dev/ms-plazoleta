@@ -1,4 +1,4 @@
-package ms_plazoleta.ms_plazoleta.domain.model;
+package com.plazoleta.ms_plazoleta.domain.model;
 
 public class Restaurante {
 

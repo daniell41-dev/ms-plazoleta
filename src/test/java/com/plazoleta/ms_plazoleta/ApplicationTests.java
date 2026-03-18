@@ -1,4 +1,4 @@
-package ms_plazoleta.ms_plazoleta;
+package com.plazoleta.ms_plazoleta;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

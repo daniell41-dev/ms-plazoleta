@@ -1,4 +1,4 @@
-package ms_plazoleta.ms_plazoleta;
+package com.plazoleta.ms_plazoleta;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
