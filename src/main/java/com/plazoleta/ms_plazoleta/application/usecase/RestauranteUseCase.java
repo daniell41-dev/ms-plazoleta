@@ -1,19 +1,30 @@
 package com.plazoleta.ms_plazoleta.application.usecase;
 
+import com.plazoleta.ms_plazoleta.domain.exception.NoPropietarioException;
 import com.plazoleta.ms_plazoleta.domain.model.Restaurante;
 import com.plazoleta.ms_plazoleta.domain.ports.in.IRestauranteServicePort;
 import com.plazoleta.ms_plazoleta.domain.ports.out.IRestaurantePersistencePort;
+import com.plazoleta.ms_plazoleta.domain.ports.out.IUsuarioServicePort;
 
 public class RestauranteUseCase implements IRestauranteServicePort {
 
     private final IRestaurantePersistencePort restaurantePersistencePort;
+    private final IUsuarioServicePort usuarioServicePort;
 
-    public RestauranteUseCase(IRestaurantePersistencePort restaurantePersistencePort) {
+    public RestauranteUseCase(IRestaurantePersistencePort restaurantePersistencePort,
+                              IUsuarioServicePort usuarioServicePort) {
         this.restaurantePersistencePort = restaurantePersistencePort;
+        this.usuarioServicePort = usuarioServicePort;
     }
 
     @Override
     public void guardarRestaurante(Restaurante restaurante) {
+
+        // El propietario debe tener rol PROPIETARIO en ms-usuario
+        String rol = usuarioServicePort.obtenerRolUsuario(restaurante.getPropietarioId());
+        if (!"PROPIETARIO".equals(rol)) {
+            throw new NoPropietarioException("El usuario no tiene rol de propietario");
+        }
 
         // El NIT debe ser únicamente numérico
         if (!restaurante.getNit().matches("\\d+")) {
