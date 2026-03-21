@@ -1,7 +1,10 @@
 package com.plazoleta.ms_plazoleta.infrastructure.config;
 
+import com.plazoleta.ms_plazoleta.application.usecase.PlatoUseCase;
 import com.plazoleta.ms_plazoleta.application.usecase.RestauranteUseCase;
+import com.plazoleta.ms_plazoleta.domain.ports.in.IPlatoServicePort;
 import com.plazoleta.ms_plazoleta.domain.ports.in.IRestauranteServicePort;
+import com.plazoleta.ms_plazoleta.domain.ports.out.IPlatoPersistencePort;
 import com.plazoleta.ms_plazoleta.domain.ports.out.IRestaurantePersistencePort;
 import com.plazoleta.ms_plazoleta.domain.ports.out.IUsuarioServicePort;
 import org.springframework.context.annotation.Bean;
@@ -15,5 +18,12 @@ public class BeanConfiguration {
             IRestaurantePersistencePort restaurantePersistencePort,
             IUsuarioServicePort usuarioServicePort) {
         return new RestauranteUseCase(restaurantePersistencePort, usuarioServicePort);
+    }
+
+    @Bean
+    public IPlatoServicePort platoServicePort(
+            IPlatoPersistencePort platoPersistencePort,
+            IRestaurantePersistencePort restaurantePersistencePort) {
+        return new PlatoUseCase(platoPersistencePort, restaurantePersistencePort);
     }
 }

@@ -7,6 +7,8 @@ import com.plazoleta.ms_plazoleta.infrastructure.output.persistence.mapper.IRest
 import com.plazoleta.ms_plazoleta.infrastructure.output.persistence.repository.IRestauranteRepository;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 @RequiredArgsConstructor
 public class RestauranteJpaAdapter implements IRestaurantePersistencePort {
@@ -17,5 +19,11 @@ public class RestauranteJpaAdapter implements IRestaurantePersistencePort {
     @Override
     public void guardarRestaurante(Restaurante restaurante) {
         restauranteRepository.save(restauranteEntityMapper.toEntity(restaurante));
+    }
+
+    @Override
+    public Optional<Restaurante> buscarRestaurantePorId(Long idRestaurante) {
+        return restauranteRepository.findById(idRestaurante)
+                .map(restauranteEntityMapper::toRestaurante);
     }
 }
