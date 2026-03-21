@@ -51,4 +51,12 @@ public class Plato {
     public Long getRestauranteId() {
         return restauranteId;
     }
+
+    public void setPrecio(Integer precio) {
+        this.precio = precio;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
 }

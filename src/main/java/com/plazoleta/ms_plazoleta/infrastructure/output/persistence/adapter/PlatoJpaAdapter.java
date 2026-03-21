@@ -6,6 +6,8 @@ import com.plazoleta.ms_plazoleta.infrastructure.output.persistence.mapper.IPlat
 import com.plazoleta.ms_plazoleta.infrastructure.output.persistence.repository.IPlatoRepository;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 public class PlatoJpaAdapter implements IPlatoPersistencePort {
 
@@ -20,5 +22,11 @@ public class PlatoJpaAdapter implements IPlatoPersistencePort {
     @Override
     public void guardarPlato(Plato plato) {
         platoRepository.save(platoEntityMapper.toEntity(plato));
+    }
+
+    @Override
+    public Optional<Plato> buscarPlatoPorId(Long id) {
+        return platoRepository.findById(id)
+                .map(platoEntityMapper::toPlato);
     }
 }

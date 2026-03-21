@@ -1,6 +1,7 @@
 package com.plazoleta.ms_plazoleta.application.usecase;
 
 import com.plazoleta.ms_plazoleta.domain.exception.NoPropietarioDelRestauranteException;
+import com.plazoleta.ms_plazoleta.domain.exception.PlatoNoEncontradoException;
 import com.plazoleta.ms_plazoleta.domain.exception.RestauranteNoEncontradoException;
 import com.plazoleta.ms_plazoleta.domain.model.Plato;
 import com.plazoleta.ms_plazoleta.domain.model.Restaurante;
@@ -39,5 +40,39 @@ public class PlatoUseCase implements IPlatoServicePort {
         }
 
         platoPersistencePort.guardarPlato(plato);
+    }
+
+    @Override
+    public void actualizarPlato(Long id, Integer precio, String descripcion, Long propietarioId) {
+        Optional<Plato> platoOpt = platoPersistencePort.buscarPlatoPorId(id);
+        if (platoOpt.isEmpty()) {
+            throw new PlatoNoEncontradoException("Plato no encontrado");
+        }
+
+        Plato plato = platoOpt.get();
+
+        Optional<Restaurante> restauranteOpt = restaurantePersistencePort.buscarRestaurantePorId(plato.getRestauranteId());
+        if (restauranteOpt.isEmpty()) {
+            throw new RestauranteNoEncontradoException("Restaurante no encontrado");
+        }
+
+        Restaurante restaurante = restauranteOpt.get();
+        if (!restaurante.getPropietarioId().equals(propietarioId)) {
+            throw new NoPropietarioDelRestauranteException("No es el propietario de este restaurante");
+        }
+
+        if (precio != null) {
+            if (precio <= 0) {
+                throw new IllegalArgumentException("El precio debe ser mayor a 0");
+            }
+            plato.setPrecio(precio);
+        }
+
+        if (descripcion != null) {
+            plato.setDescripcion(descripcion);
+        }
+
+        platoPersistencePort.guardarPlato(plato);
+
     }
 }
