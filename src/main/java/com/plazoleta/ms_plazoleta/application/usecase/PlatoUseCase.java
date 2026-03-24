@@ -75,4 +75,27 @@ public class PlatoUseCase implements IPlatoServicePort {
         platoPersistencePort.guardarPlato(plato);
 
     }
+
+    @Override
+    public void habilitarDeshabilitarPlato(Long id, Boolean activa, Long propietarioId) {
+        Optional<Plato> platoOpt = platoPersistencePort.buscarPlatoPorId(id);
+        if (platoOpt.isEmpty()) {
+            throw new PlatoNoEncontradoException("Plato no encontrado");
+        }
+
+        Plato plato = platoOpt.get();
+
+        Optional<Restaurante> restauranteOpt = restaurantePersistencePort.buscarRestaurantePorId(plato.getRestauranteId());
+        if (restauranteOpt.isEmpty()) {
+            throw new RestauranteNoEncontradoException("Restaurante no encontrado");
+        }
+
+        Restaurante restaurante = restauranteOpt.get();
+        if (!restaurante.getPropietarioId().equals(propietarioId)) {
+            throw new NoPropietarioDelRestauranteException("No es el propietario de este restaurante");
+        }
+
+        plato.setActiva(activa);
+        platoPersistencePort.guardarPlato(plato);
+    }
 }

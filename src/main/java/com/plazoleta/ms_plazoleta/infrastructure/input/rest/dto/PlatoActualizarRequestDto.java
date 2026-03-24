@@ -1,6 +1,5 @@
 package com.plazoleta.ms_plazoleta.infrastructure.input.rest.dto;
 
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,6 +15,4 @@ public class PlatoActualizarRequestDto {
 
     private String descripcion;
 
-    @NotNull(message = "El propietario es obligatorio")
-    private Long propietarioId;
 }

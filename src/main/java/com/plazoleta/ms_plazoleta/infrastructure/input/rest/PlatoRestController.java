@@ -6,6 +6,7 @@ import com.plazoleta.ms_plazoleta.infrastructure.input.rest.mapper.PlatoRequestM
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,9 +24,10 @@ public class PlatoRestController {
     @PostMapping("/{restauranteId}/platos")
     public ResponseEntity<Void> crearPlato(@PathVariable Long restauranteId,
                                            @Valid @RequestBody PlatoRequestDto platoRequestDto) {
+        Long propietarioId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         platoServicePort.guardarPlato(
                 platoRequestMapper.toDomain(platoRequestDto, restauranteId),
-                platoRequestDto.getPropietarioId()
+                propietarioId
         );
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

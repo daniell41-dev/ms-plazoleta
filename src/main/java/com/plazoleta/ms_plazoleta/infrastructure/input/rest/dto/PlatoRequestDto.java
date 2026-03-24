@@ -28,8 +28,4 @@ public class PlatoRequestDto {
     @NotBlank(message = "La categoría es obligatoria")
     private String categoria;
 
-    @NotNull(message = "El propietario es obligatorio")
-    private Long propietarioId;
-
-
 }

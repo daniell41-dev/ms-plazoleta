@@ -59,4 +59,8 @@ public class Plato {
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
+
+    public void setActiva(Boolean activa) {
+        this.activa = activa;
+    }
 }

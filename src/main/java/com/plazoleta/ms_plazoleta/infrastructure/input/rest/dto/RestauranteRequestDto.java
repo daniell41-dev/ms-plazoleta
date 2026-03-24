@@ -30,4 +30,5 @@ public class RestauranteRequestDto {
 
     @NotNull(message = "El ID del propietario es obligatorio")
     private Long propietarioId;
+
 }
