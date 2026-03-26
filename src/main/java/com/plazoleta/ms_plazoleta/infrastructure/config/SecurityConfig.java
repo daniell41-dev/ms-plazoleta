@@ -43,6 +43,7 @@ public class SecurityConfig {
             )
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.POST, "/restaurantes").hasAuthority("ADMINISTRADOR")
+                .requestMatchers(HttpMethod.GET, "/restaurantes").hasAuthority("CLIENTE")
                 .requestMatchers(HttpMethod.POST, "/restaurantes/*/platos").hasAuthority("PROPIETARIO")
                 .requestMatchers(HttpMethod.PATCH, "/platos/*").hasAuthority("PROPIETARIO")
                 .requestMatchers(HttpMethod.PATCH, "/platos/*/estado").hasAuthority("PROPIETARIO")

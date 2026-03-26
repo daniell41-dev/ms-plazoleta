@@ -7,6 +7,9 @@ import com.plazoleta.ms_plazoleta.infrastructure.output.persistence.mapper.IRest
 import com.plazoleta.ms_plazoleta.infrastructure.output.persistence.repository.IRestauranteRepository;
 import org.springframework.stereotype.Component;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -25,5 +28,14 @@ public class RestauranteJpaAdapter implements IRestaurantePersistencePort {
     public Optional<Restaurante> buscarRestaurantePorId(Long idRestaurante) {
         return restauranteRepository.findById(idRestaurante)
                 .map(restauranteEntityMapper::toRestaurante);
+    }
+
+    @Override
+    public List<Restaurante> listarRestaurantes(int pagina, int tamano) {
+        Pageable pageable = PageRequest.of(pagina, tamano);
+        return restauranteRepository.findAllByOrderByNombreAsc(pageable)
+                .stream()
+                .map(restauranteEntityMapper::toRestaurante)
+                .toList();
     }
 }

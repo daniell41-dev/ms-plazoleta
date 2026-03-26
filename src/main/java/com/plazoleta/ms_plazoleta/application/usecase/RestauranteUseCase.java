@@ -5,6 +5,7 @@ import com.plazoleta.ms_plazoleta.domain.model.Restaurante;
 import com.plazoleta.ms_plazoleta.domain.ports.in.IRestauranteServicePort;
 import com.plazoleta.ms_plazoleta.domain.ports.out.IRestaurantePersistencePort;
 import com.plazoleta.ms_plazoleta.domain.ports.out.IUsuarioServicePort;
+import java.util.List;
 
 public class RestauranteUseCase implements IRestauranteServicePort {
 
@@ -45,5 +46,10 @@ public class RestauranteUseCase implements IRestauranteServicePort {
         }
 
         restaurantePersistencePort.guardarRestaurante(restaurante);
+    }
+
+    @Override
+    public List<Restaurante> listarRestaurantes(int pagina, int tamano) {
+        return restaurantePersistencePort.listarRestaurantes(pagina, tamano);
     }
 }
