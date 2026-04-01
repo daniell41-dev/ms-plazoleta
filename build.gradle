@@ -55,6 +55,7 @@ def jacocoExclusions = [
 	'**/infrastructure/output/persistence/mapper/**',
 	'**/infrastructure/output/persistence/repository/**',
 	'**/infrastructure/output/persistence/adapter/**',
+	'**/infrastructure/output/feignclient/**',
 	'**/infrastructure/output/restclient/**',
 ]
 

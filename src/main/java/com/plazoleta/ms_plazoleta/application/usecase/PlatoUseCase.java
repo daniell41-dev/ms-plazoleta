@@ -1,5 +1,6 @@
 package com.plazoleta.ms_plazoleta.application.usecase;
 
+import com.plazoleta.ms_plazoleta.domain.constants.PlatoConstantes;
 import com.plazoleta.ms_plazoleta.domain.exception.NoPropietarioDelRestauranteException;
 import com.plazoleta.ms_plazoleta.domain.exception.PlatoNoEncontradoException;
 import com.plazoleta.ms_plazoleta.domain.exception.RestauranteNoEncontradoException;
@@ -35,7 +36,7 @@ public class PlatoUseCase implements IPlatoServicePort {
             throw new NoPropietarioDelRestauranteException("No es el propietario de este restaurante");
         }
 
-        if (plato.getPrecio() <= 0) {
+        if (plato.getPrecio() <= PlatoConstantes.PRECIO_MINIMO) {
             throw new IllegalArgumentException("El precio debe ser mayor a 0");
         }
 
