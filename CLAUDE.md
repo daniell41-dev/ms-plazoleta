@@ -129,3 +129,36 @@ Antes de guardar un restaurante, el caso de uso debe validar que `propietarioId`
 ## Comportamiento esperado de Claude
 
 El usuario está **practicando y aprendiendo**. Guiar de **un archivo a la vez**, explicando qué hace cada uno y por qué existe, luego esperar confirmación antes de continuar con el siguiente. No dar la solución hasta que el usuario la pida explícitamente.
+
+---
+
+## Flujo de ramas y merge strategy
+
+### Contexto multi-microservicio
+El sistema tiene DOS microservicios que comparten el mismo contexto general:
+- `ms-usuario` (localhost:8080)
+- `ms-plazoleta` (localhost:8081)
+
+Las HUs pueden estar en cualquiera de los dos. Ejemplo: h1 está en ms-usuario.
+
+### Orden de merge
+Las ramas se numeran `h<N>-<descripcion>`. El merge a `dev` sigue el orden numérico: h2 antes que h3, h3 antes que h4, etc.
+
+### Flujo exacto para integrar una rama a dev
+
+1. Feature branch lista con su HU (ej: `h3-crear-plato`)
+2. Pararse en `dev` y sacar rama auxiliar: `git checkout -b h3-crear-plato-aux`
+3. Merge de la feature: `git merge h3-crear-plato`
+4. Resolver conflictos
+5. PR de `h3-crear-plato-aux` → `dev`
+6. Repetir para la siguiente HU en orden numérico
+
+### Regla crítica — evitar conflictos entre aux branches
+**Cada rama auxiliar solo toca lo que es PROPIO de su HU.**
+
+- Los archivos compartidos (constantes de dominio, build.gradle con JaCoCo, rename de adaptadores) los aplica la PRIMERA aux que llega a dev.
+- Las ramas siguientes **no vuelven a tocar** esos archivos ya mergeados — solo agregan lo nuevo de su HU.
+- Si una aux necesita algo que aún no llegó a dev (porque la rama anterior no mergeó), se acepta el conflicto puntual y se resuelve manteniendo ambos cambios.
+
+### Por qué este flujo
+El reto de aprendizaje exige que cada feature branch tenga SOLO lo que pide la HU. Los fixes de calidad (constantes, tests, JaCoCo, renombrados) se aplican en la rama auxiliar, nunca en la feature directa.
