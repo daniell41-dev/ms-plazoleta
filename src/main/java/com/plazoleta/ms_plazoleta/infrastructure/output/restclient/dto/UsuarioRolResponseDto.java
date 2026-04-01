@@ -1,4 +1,4 @@
-package com.plazoleta.ms_plazoleta.infrastructure.output.feignclient.dto;
+package com.plazoleta.ms_plazoleta.infrastructure.output.restclient.dto;
 
 public class UsuarioRolResponseDto {
 
