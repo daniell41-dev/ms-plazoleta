@@ -220,4 +220,63 @@ class PlatoUseCaseTest {
         assertEquals("Nueva descripción", plato.getDescripcion());
         verify(platoPersistencePort, times(1)).guardarPlato(plato);
     }
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // habilitarDeshabilitarPlato
+    // ═══════════════════════════════════════════════════════════════════════
+
+    @Test
+    void habilitarDeshabilitarPlato_cuandoSeHabilita_guardaConActivaTrue() {
+        plato.setActiva(false);
+        when(platoPersistencePort.buscarPlatoPorId(PLATO_ID)).thenReturn(Optional.of(plato));
+        when(restaurantePersistencePort.buscarRestaurantePorId(RESTAURANTE_ID)).thenReturn(Optional.of(restaurante));
+
+        platoUseCase.habilitarDeshabilitarPlato(PLATO_ID, true, PROPIETARIO_ID);
+
+        assertTrue(plato.getActiva());
+        verify(platoPersistencePort, times(1)).guardarPlato(plato);
+    }
+
+    @Test
+    void habilitarDeshabilitarPlato_cuandoSeDeshabilita_guardaConActivaFalse() {
+        when(platoPersistencePort.buscarPlatoPorId(PLATO_ID)).thenReturn(Optional.of(plato));
+        when(restaurantePersistencePort.buscarRestaurantePorId(RESTAURANTE_ID)).thenReturn(Optional.of(restaurante));
+
+        platoUseCase.habilitarDeshabilitarPlato(PLATO_ID, false, PROPIETARIO_ID);
+
+        assertFalse(plato.getActiva());
+        verify(platoPersistencePort, times(1)).guardarPlato(plato);
+    }
+
+    @Test
+    void habilitarDeshabilitarPlato_cuandoPlatoNoExiste_lanzaPlatoNoEncontradoException() {
+        when(platoPersistencePort.buscarPlatoPorId(PLATO_ID)).thenReturn(Optional.empty());
+
+        assertThrows(PlatoNoEncontradoException.class,
+                () -> platoUseCase.habilitarDeshabilitarPlato(PLATO_ID, true, PROPIETARIO_ID));
+
+        verify(platoPersistencePort, never()).guardarPlato(any());
+    }
+
+    @Test
+    void habilitarDeshabilitarPlato_cuandoRestauranteNoExiste_lanzaRestauranteNoEncontradoException() {
+        when(platoPersistencePort.buscarPlatoPorId(PLATO_ID)).thenReturn(Optional.of(plato));
+        when(restaurantePersistencePort.buscarRestaurantePorId(RESTAURANTE_ID)).thenReturn(Optional.empty());
+
+        assertThrows(RestauranteNoEncontradoException.class,
+                () -> platoUseCase.habilitarDeshabilitarPlato(PLATO_ID, true, PROPIETARIO_ID));
+
+        verify(platoPersistencePort, never()).guardarPlato(any());
+    }
+
+    @Test
+    void habilitarDeshabilitarPlato_cuandoPropietarioNoEsDelRestaurante_lanzaNoPropietarioDelRestauranteException() {
+        when(platoPersistencePort.buscarPlatoPorId(PLATO_ID)).thenReturn(Optional.of(plato));
+        when(restaurantePersistencePort.buscarRestaurantePorId(RESTAURANTE_ID)).thenReturn(Optional.of(restaurante));
+
+        assertThrows(NoPropietarioDelRestauranteException.class,
+                () -> platoUseCase.habilitarDeshabilitarPlato(PLATO_ID, true, OTRO_PROPIETARIO_ID));
+
+        verify(platoPersistencePort, never()).guardarPlato(any());
+    }
 }

@@ -12,6 +12,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -138,7 +140,7 @@ class RestauranteUseCaseTest {
     void guardarRestaurante_cuandoTelefonoSuperaLos13Caracteres_lanzaIllegalArgumentException() {
         Restaurante restaurante = new Restaurante(
                 null, "La Fogata", "123456789", "Calle 123",
-                "+5730012345678", "http://logo.com/img.png", 1L  // 14 chars
+                "+5730012345678", "http://logo.com/img.png", 1L
         );
         when(usuarioServicePort.obtenerRolUsuario(1L)).thenReturn(RestauranteConstantes.ROL_PROPIETARIO);
 
@@ -152,7 +154,7 @@ class RestauranteUseCaseTest {
     void guardarRestaurante_cuandoTelefonoTieneExactamente13Caracteres_guardaCorrectamente() {
         Restaurante restaurante = new Restaurante(
                 null, "La Fogata", "123456789", "Calle 123",
-                "+573001234567", "http://logo.com/img.png", 1L  // 13 chars exactos
+                "+573001234567", "http://logo.com/img.png", 1L
         );
         when(usuarioServicePort.obtenerRolUsuario(1L)).thenReturn(RestauranteConstantes.ROL_PROPIETARIO);
 
@@ -188,5 +190,18 @@ class RestauranteUseCaseTest {
         restauranteUseCase.guardarRestaurante(restaurante);
 
         verify(restaurantePersistencePort, times(1)).guardarRestaurante(restaurante);
+    }
+
+    // ─── listarRestaurantes ──────────────────────────────────────────────────
+
+    @Test
+    void listarRestaurantes_cuandoSeLlama_delegaAlPuerto() {
+        List<Restaurante> esperado = List.of(restauranteValido);
+        when(restaurantePersistencePort.listarRestaurantes(0, 10)).thenReturn(esperado);
+
+        List<Restaurante> resultado = restauranteUseCase.listarRestaurantes(0, 10);
+
+        assertEquals(esperado, resultado);
+        verify(restaurantePersistencePort, times(1)).listarRestaurantes(0, 10);
     }
 }
