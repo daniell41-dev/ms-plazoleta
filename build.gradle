@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '4.0.3'
 	id 'io.spring.dependency-management' version '1.1.7'
+	id 'jacoco'
 }
 
 group = 'ms-plazoleta'
@@ -32,8 +33,59 @@ dependencies {
 	// Validation: anotaciones para validar datos de entrada (@NotBlank, @Email, @Size, etc.)
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	testRuntimeOnly 'com.h2database:h2'
 }
+
+def jacocoExclusions = [
+	'**/Application*',
+	'**/domain/model/**',
+	'**/domain/ports/**',
+	'**/domain/exception/**',
+	'**/domain/constants/**',
+	'**/infrastructure/config/**',
+	'**/infrastructure/input/rest/dto/**',
+	'**/infrastructure/input/rest/mapper/**',
+	'**/infrastructure/input/rest/*RestController*',
+	'**/infrastructure/output/persistence/entity/**',
+	'**/infrastructure/output/persistence/mapper/**',
+	'**/infrastructure/output/persistence/repository/**',
+	'**/infrastructure/output/persistence/adapter/**',
+	'**/infrastructure/output/restclient/**',
+]
 
 tasks.named('test') {
 	useJUnitPlatform()
+	finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+	dependsOn test
+	afterEvaluate {
+		classDirectories.setFrom(files(classDirectories.files.collect {
+			fileTree(dir: it, excludes: jacocoExclusions)
+		}))
+	}
+	reports {
+		xml.required = true
+		html.required = true
+	}
+}
+
+jacocoTestCoverageVerification {
+	afterEvaluate {
+		classDirectories.setFrom(files(classDirectories.files.collect {
+			fileTree(dir: it, excludes: jacocoExclusions)
+		}))
+	}
+	violationRules {
+		rule {
+			limit {
+				minimum = 0.96
+			}
+		}
+	}
+}
+
+tasks.named('check') {
+	dependsOn jacocoTestCoverageVerification
 }
