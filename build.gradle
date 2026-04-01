@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '4.0.3'
 	id 'io.spring.dependency-management' version '1.1.7'
+	id 'jacoco'
 }
 
 group = 'ms-plazoleta'
@@ -40,4 +41,36 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+	finalizedBy jacocoTestReport
+}
+
+def jacocoExclusions = [
+	'**/infrastructure/**',
+	'**/Application.class',
+	'**/domain/model/**',
+	'**/domain/exception/**',
+]
+
+jacocoTestReport {
+	dependsOn test
+	classDirectories.setFrom(files(classDirectories.files.collect {
+		fileTree(dir: it, exclude: jacocoExclusions)
+	}))
+	reports {
+		xml.required = false
+		html.required = true
+	}
+}
+
+jacocoTestCoverageVerification {
+	classDirectories.setFrom(files(classDirectories.files.collect {
+		fileTree(dir: it, exclude: jacocoExclusions)
+	}))
+	violationRules {
+		rule {
+			limit {
+				minimum = 0.96
+			}
+		}
+	}
 }
