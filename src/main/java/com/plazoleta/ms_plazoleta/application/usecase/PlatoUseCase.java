@@ -63,7 +63,7 @@ public class PlatoUseCase implements IPlatoServicePort {
         }
 
         if (precio != null) {
-            if (precio <= 0) {
+            if (precio <= PlatoConstantes.PRECIO_MINIMO) {
                 throw new IllegalArgumentException("El precio debe ser mayor a 0");
             }
             plato.setPrecio(precio);
