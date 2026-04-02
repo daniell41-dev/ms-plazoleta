@@ -20,17 +20,17 @@ public class PlatoOperacionesRestController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<Void> actualizarPlato(@PathVariable Long id,
-                                                @Valid @RequestBody PlatoActualizarRequestDto dto) {
+                                                @Valid @RequestBody PlatoActualizarRequestDto platoActualizarDto) {
         Long propietarioId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        platoServicePort.actualizarPlato(id, dto.getPrecio(), dto.getDescripcion(), propietarioId);
+        platoServicePort.actualizarPlato(id, platoActualizarDto.getPrecio(), platoActualizarDto.getDescripcion(), propietarioId);
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/{id}/estado")
     public ResponseEntity<Void> habilitarDeshabilitarPlato(@PathVariable Long id,
-                                                           @Valid @RequestBody PlatoHabilitarRequestDto dto) {
+                                                           @Valid @RequestBody PlatoHabilitarRequestDto platoHabilitarDto) {
         Long propietarioId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        platoServicePort.habilitarDeshabilitarPlato(id, dto.getActiva(), propietarioId);
+        platoServicePort.habilitarDeshabilitarPlato(id, platoHabilitarDto.getActiva(), propietarioId);
         return ResponseEntity.ok().build();
     }
 

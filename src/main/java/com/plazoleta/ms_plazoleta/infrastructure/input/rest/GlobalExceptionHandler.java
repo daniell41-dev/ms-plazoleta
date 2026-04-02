@@ -1,11 +1,11 @@
 package com.plazoleta.ms_plazoleta.infrastructure.input.rest;
 
+import com.plazoleta.ms_plazoleta.domain.exception.NitDuplicadoException;
 import com.plazoleta.ms_plazoleta.domain.exception.NoPropietarioDelRestauranteException;
 import com.plazoleta.ms_plazoleta.domain.exception.NoPropietarioException;
 import com.plazoleta.ms_plazoleta.domain.exception.PlatoNoEncontradoException;
 import com.plazoleta.ms_plazoleta.domain.exception.RestauranteNoEncontradoException;
 import com.plazoleta.ms_plazoleta.infrastructure.input.rest.dto.ErrorResponseDto;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -19,7 +19,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponseDto> handleValidacion(MethodArgumentNotValidException ex) {
         String mensaje = ex.getBindingResult().getFieldErrors().stream()
-                .map(e -> e.getDefaultMessage())
+                .map(fieldError -> fieldError.getDefaultMessage())
                 .findFirst()
                 .orElse("Error de validación");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -59,11 +59,11 @@ public class GlobalExceptionHandler {
                 .body(new ErrorResponseDto(404, ex.getMessage()));
     }
 
-    // NIT duplicado u otra violación de restricción única en la base de datos
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<ErrorResponseDto> handleDuplicado(DataIntegrityViolationException ex) {
+    // NIT duplicado
+    @ExceptionHandler(NitDuplicadoException.class)
+    public ResponseEntity<ErrorResponseDto> handleNitDuplicado(NitDuplicadoException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
-                .body(new ErrorResponseDto(409, "Ya existe un registro con esos datos (posible NIT duplicado)"));
+                .body(new ErrorResponseDto(409, ex.getMessage()));
     }
 
     // Fallback para cualquier error no contemplado

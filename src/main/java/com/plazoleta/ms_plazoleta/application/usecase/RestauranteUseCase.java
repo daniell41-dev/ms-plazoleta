@@ -1,5 +1,6 @@
 package com.plazoleta.ms_plazoleta.application.usecase;
 
+import com.plazoleta.ms_plazoleta.domain.constants.RestauranteConstants;
 import com.plazoleta.ms_plazoleta.domain.exception.NoPropietarioException;
 import com.plazoleta.ms_plazoleta.domain.model.Restaurante;
 import com.plazoleta.ms_plazoleta.domain.ports.in.IRestauranteServicePort;
@@ -23,7 +24,7 @@ public class RestauranteUseCase implements IRestauranteServicePort {
 
         // El propietario debe tener rol PROPIETARIO en ms-usuario
         String rol = usuarioServicePort.obtenerRolUsuario(restaurante.getPropietarioId());
-        if (!"PROPIETARIO".equals(rol)) {
+        if (!RestauranteConstants.ROL_PROPIETARIO.equals(rol)) {
             throw new NoPropietarioException("El usuario no tiene rol de propietario");
         }
 
@@ -36,7 +37,7 @@ public class RestauranteUseCase implements IRestauranteServicePort {
         if (!restaurante.getTelefono().matches("\\+?\\d+")) {
             throw new IllegalArgumentException("El teléfono debe ser únicamente numérico");
         }
-        if (restaurante.getTelefono().length() > 13) {
+        if (restaurante.getTelefono().length() > RestauranteConstants.LONGITUD_MAXIMA_TELEFONO) {
             throw new IllegalArgumentException("El teléfono no puede tener más de 13 caracteres");
         }
 
